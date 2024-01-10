@@ -12,26 +12,65 @@ datasource db {
   relationMode = "prisma"
 }
 
+
+
+// TODO: receipt models // all needed models 
+model UserProfile  {
+  id                String @unique @db.VarChar(256)
+  email             String @unique @db.VarChar(256)
+  isTeacher         Boolean @default(false)
+  isActive          Boolean @default(false)
+
+  firstName         String @db.Text
+  lastName          String @db.Text
+  IIN               String @db.Text
+  phoneNumber       String @db.Text
+  avatarUrl         String @db.Text
+  activeCourses     Course[]
+  // totalProgress     Int @db.Int
+  
+  receiptUrl        Receipts[]
+  startedAt         DateTime @db.DateTime()
+  finishAt          DateTime @db.DateTime()
+}
+
+model Receipts {
+    id                String  @unique
+    receiptUrl        String
+    userId            String
+    uploadedAt        DateTime @db.DateTime()
+
+    userProfileId        String?
+    userProfile          UserProfile? @relation(fields: [userProfileId], references: [id]) 
+    
+    @@index([id])
+    @@index([userProfileId])
+}
+
 model Course {
-  id                String @id @default(uuid())
-  userId            String
-  title             String @db.Text
-  description       String? @db.Text
-  imageUrl          String? @db.Text
-  price             Float?
-  isPublished       Boolean @default(false)
+    id                String @id @default(uuid())
+    userId            String
+    title             String @db.Text
+    description       String? @db.Text
+    imageUrl          String? @db.Text
+    price             Float?
+    isPublished       Boolean @default(false)
 
   categoryId        String?
   category          Category? @relation(fields: [categoryId], references: [id])
 
-  chapters Chapter[]
+  userProfileId     String?
+  userProfile       UserProfile? @relation(fields: [userProfileId], references: [id])
+
+  chapters          Chapter[]
   attachments       Attachment[]
-  purchases Purchase[]
+  purchases         Purchase[]
 
   createdAt         DateTime @default(now())
   updateAt          DateTime @updatedAt
 
   @@index([categoryId])
+  @@index([userProfileId])
   @@fulltext([title])
 }
 
