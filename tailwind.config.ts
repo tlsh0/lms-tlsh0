@@ -12,9 +12,6 @@ const config = withUt({
 	],
   prefix: "",
   theme: {
-    fontSize: {
-      'xxs': '.6rem',
-    },
     container: {
       center: true,
       padding: "2rem",
@@ -23,6 +20,9 @@ const config = withUt({
       },
     },
     extend: {
+      fontSize: {
+        xxs: ".6rem",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
