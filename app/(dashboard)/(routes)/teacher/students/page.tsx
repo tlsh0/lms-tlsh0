@@ -1,24 +1,32 @@
 import { clerkClient } from "@clerk/nextjs";
 import { DataTable } from "./_components/data-table";
 import { columns } from "./_components/columns";
+import { db } from "@/lib/db";
 
 type Props = {};
 
-
 export default async function Page({}: Props) {
-  const users = await clerkClient.users.getUserList();
+    const studentProfiles = await db.studentProfile.findMany();
+    const studentProfileIds = studentProfiles.map((student) => student.id);
 
-  const students = users.map((user) => {
-    const emailAddress = user.emailAddresses[0].emailAddress
+    const studentUsers = await clerkClient.users.getUserList({
+        userId: studentProfileIds,
+    });
 
-    return {
-      id: user.id,
-      fullName: user.firstName + ' ' + user.lastName,
-      emailAddress: emailAddress,
-      isSubscriber: false
-    }
-  })
+    const tableData = studentUsers.map((user) => {
+        const emailAddress = user.emailAddresses[0].emailAddress;
 
-  
-  return <div className="p-6"><DataTable columns={columns} data={students} /></div>;
+        return {
+            id: user.id,
+            fullName: user.firstName + " " + user.lastName,
+            emailAddress: emailAddress,
+            isSubscriber: false,
+        };
+    });
+
+    return (
+        <div className="p-6">
+            <DataTable columns={columns} data={tableData} />
+        </div>
+    );
 }

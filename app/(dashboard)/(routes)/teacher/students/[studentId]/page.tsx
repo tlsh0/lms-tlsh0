@@ -2,6 +2,7 @@ import { clerkClient } from "@clerk/nextjs";
 import { PersonalInformationForm } from "./_components/personal-information-form";
 import { DeleteUser } from "./_components/delete-user";
 import { ChangePasswordModal } from "./_components/change-password-modal";
+import { BanUnbanUser } from "./_components/ban-unban-user";
 
 type Props = {
     params: {
@@ -12,6 +13,7 @@ type Props = {
 export default async function Page({ params }: Props) {
     const slug = params.studentId;
     const student = await clerkClient.users.getUser(slug);
+    const { id, firstName, lastName, banned } = student;
 
     return (
         <div className="p-6">
@@ -28,9 +30,9 @@ export default async function Page({ params }: Props) {
                 </div>
                 <div className="flex-1">
                     <PersonalInformationForm
-                        id={student.id}
-                        firstName={student.firstName}
-                        lastName={student.lastName}
+                        id={id}
+                        firstName={firstName}
+                        lastName={lastName}
                     />
                 </div>
             </div>
@@ -46,7 +48,26 @@ export default async function Page({ params }: Props) {
                     </div>
                 </div>
                 <div className="flex-1 flex justify-end">
-                    <ChangePasswordModal id={student.id} />
+                    <ChangePasswordModal id={id} />
+                </div>
+            </div>
+            <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-6 mb-7 flex space-x-6">
+                <div className="flex-1">
+                    <div className="p-6 flex flex-row items-center justify-between space-y-0 pb-2">
+                        <h3 className="tracking-tight text-2xl font-medium">
+                            {banned ? "Unban" : "Ban"} student
+                        </h3>
+                    </div>
+                    <div className="p-6 pt-0">
+                        <div>
+                            {banned
+                                ? "This action restores the ability for a user to sign in"
+                                : "This action makes a student unable to sign in and clears all their active sessions"}
+                        </div>
+                    </div>
+                </div>
+                <div className="flex-1 flex justify-end">
+                    <BanUnbanUser id={id} banned={banned} />
                 </div>
             </div>
             <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-6 mb-7 flex space-x-6">
@@ -61,7 +82,7 @@ export default async function Page({ params }: Props) {
                     </div>
                 </div>
                 <div className="flex-1 flex justify-end">
-                    <DeleteUser id={student.id} />
+                    <DeleteUser id={id} />
                 </div>
             </div>
         </div>
