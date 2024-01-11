@@ -15,36 +15,39 @@ datasource db {
 
 
 // TODO: receipt models // all needed models 
-model UserProfile  {
+model StudentProfile  {
   id                String @unique @db.VarChar(256)
-  email             String @unique @db.VarChar(256)
-  isTeacher         Boolean @default(false)
-  isActive          Boolean @default(false)
-
-  firstName         String @db.Text
-  lastName          String @db.Text
-  IIN               String @db.Text
-  phoneNumber       String @db.Text
-  avatarUrl         String @db.Text
+  // isTeacher         Boolean @default(false)
+  IIN               String? @db.Text
   activeCourses     Course[]
-  // totalProgress     Int @db.Int
   
-  receiptUrl        Receipts[]
-  startedAt         DateTime @db.DateTime()
-  finishAt          DateTime @db.DateTime()
+  // membership        StudentMembership?
+  receipts          Receipts[]
 }
 
+// if student.isActive != isActive {
+//   axios.put(`/api/students/${studentId}/update)
+// }
+
+// model StudentMembership {
+//     id                    String @id @unique @default(uuid())
+//     StudentProfileId        String
+//     StudentProfile          StudentProfile @relation(fields: [StudentProfileId], references: [id]) 
+
+//     // @@index([id])
+//     @@index([StudentProfileId])
+// }
+
 model Receipts {
-    id                String  @unique
+    id                String @id @default(uuid())
     receiptUrl        String
     userId            String
     uploadedAt        DateTime @db.DateTime()
 
-    userProfileId        String?
-    userProfile          UserProfile? @relation(fields: [userProfileId], references: [id]) 
+    StudentProfileId        String?
+    StudentProfile          StudentProfile? @relation(fields: [StudentProfileId], references: [id]) 
     
-    @@index([id])
-    @@index([userProfileId])
+    @@index([StudentProfileId])
 }
 
 model Course {
@@ -59,8 +62,8 @@ model Course {
   categoryId        String?
   category          Category? @relation(fields: [categoryId], references: [id])
 
-  userProfileId     String?
-  userProfile       UserProfile? @relation(fields: [userProfileId], references: [id])
+  StudentProfileId     String?
+  StudentProfile       StudentProfile? @relation(fields: [StudentProfileId], references: [id])
 
   chapters          Chapter[]
   attachments       Attachment[]
@@ -70,7 +73,7 @@ model Course {
   updateAt          DateTime @updatedAt
 
   @@index([categoryId])
-  @@index([userProfileId])
+  @@index([StudentProfileId])
   @@fulltext([title])
 }
 
