@@ -108,11 +108,32 @@ model Chapter {
     course                  Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
     userProgress            UserProgress[]
+    tasks                   Task[]
 
     createdAt               DateTime @default(now())
     updateAt                DateTime @updatedAt()
 
     @@index([courseId])
+}
+
+model Task {
+    id                      String @id @default(uuid())
+    title                   String
+    description             String? @db.Text
+    videoUrl                String? @db.Text
+    position                Int
+    isPublished             Boolean @default(false)
+    isFree                  Boolean @default(false)
+
+    muxData                 MuxData?
+
+    chapterId               String?
+    chapter                 Chapter? @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+    createdAt               DateTime @default(now())
+    updateAt                DateTime @updatedAt()
+
+    @@index([chapterId])
 }
 
 model MuxData {
@@ -122,6 +143,9 @@ model MuxData {
 
     chapterId               String @unique
     chapter                 Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+    taskId                  String? @unique
+    task                    Task? @relation(fields: [taskId], references: [id], onDelete: Cascade)
 }
 
 model UserProgress {

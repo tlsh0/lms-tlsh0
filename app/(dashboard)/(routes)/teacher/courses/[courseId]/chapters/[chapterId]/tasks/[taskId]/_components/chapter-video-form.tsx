@@ -3,31 +3,32 @@
 import * as z from "zod";
 import axios from "axios";
 import MuxPlayer from "@mux/mux-player-react";
-import { Pencil, PlusCircle, ImageIcon, VideoIcon } from "lucide-react";
+import { Pencil, PlusCircle, VideoIcon } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { Chapter, Course, MuxData } from "@prisma/client";
-import Image from "next/image";
+import { MuxData, Task } from "@prisma/client";
 
 import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/file-upload";
 
-interface ChapterVideoFormProps {
-  initialData: Chapter & { muxData?: MuxData | null };
+interface TaskVideoFormProps {
+  initialData: Task & { muxData?: MuxData | null };
   courseId: string;
   chapterId: string;
+  taskId: string;
 };
 
 const formSchema = z.object({
   videoUrl: z.string().min(1),
 });
 
-export const ChapterVideoForm = ({
+export const TaskVideoForm = ({
   initialData,
   courseId,
   chapterId,
-}: ChapterVideoFormProps) => {
+  taskId,
+}: TaskVideoFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const toggleEdit = () => setIsEditing((current) => !current);
@@ -36,8 +37,8 @@ export const ChapterVideoForm = ({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, values);
-      toast.success("Chapter updated");
+      await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/tasks/${taskId}`, values);
+      toast.success("Task updated");
       toggleEdit();
       router.refresh();
     } catch {
@@ -48,7 +49,7 @@ export const ChapterVideoForm = ({
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Chapter Video
+        Task Video
         <Button onClick={toggleEdit} variant="ghost">
           {isEditing && (
             <>Cancel</>
