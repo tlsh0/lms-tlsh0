@@ -58,6 +58,22 @@ export async function DELETE(
             }
          }
 
+
+         //added a part where it deletes the tasks in a deleted lesson
+         const chapterTasks = await db.task.findMany({
+            where: {
+                chapterId: params.chapterId
+            }
+         })
+
+         if (!chapterTasks) {
+            await db.task.deleteMany({
+                where: {
+                    chapterId: params.chapterId
+                }
+            })
+         }
+
          const deletedChapter = await db.chapter.delete({
             where: {
                 id: params.chapterId

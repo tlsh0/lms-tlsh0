@@ -9,6 +9,7 @@ import { TaskActions } from "./_components/task-actions";
 import { TaskTitleForm } from "./_components/task-title-form";
 import { TaskDescriptionForm } from "./_components/task-description-form";
 import { TaskVideoForm } from "./_components/chapter-video-form";
+import { TaskQuizForm } from "./_components/task-quiz-form";
 
 const TaskIdPage = async ({
     params
@@ -105,6 +106,20 @@ const TaskIdPage = async ({
                                 taskId={params.taskId}
                             />
                         </div>
+                    </div>
+                    <div>
+                        <div className="flex items-center gap-x-2">
+                            <IconBadge icon={Video} />
+                            <h2 className="text-xl">
+                                Add a quiz
+                            </h2>
+                        </div>
+                        <TaskQuizForm
+                            initialData={task}
+                            chapterId={params.chapterId}
+                            courseId={params.courseId}
+                            taskId={params.taskId}
+                        />
                     </div>
                     <div>
                         <div className="flex items-center gap-x-2">

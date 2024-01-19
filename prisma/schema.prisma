@@ -13,17 +13,17 @@ datasource db {
 }
 
 model StudentProfile  {
-    id                      String @unique @db.VarChar(256)
-    IIN                     String? @db.Text
+    id                      String                  @unique @db.VarChar(256)
+    IIN                     String?                 @db.Text
     activeCourses           Course[]
     membership              Membership[]
     receipts                Receipts[]
 }
 
 model Membership {
-    id                      String @unique @default(uuid())
-    studentProfileId        String? @unique
-    studentProfile          StudentProfile? @relation(fields: [studentProfileId], references: [id]) 
+    id                      String                  @unique @default(uuid())
+    studentProfileId        String?                 @unique
+    studentProfile          StudentProfile?         @relation(fields: [studentProfileId], references: [id]) 
     comment                 String?
 
     purchasedTime           DateTime
@@ -35,38 +35,38 @@ model Membership {
 }
 
 model Receipts {
-    id                      String @id @default(uuid())
+    id                      String                  @id @default(uuid())
     receiptUrl              String
     userId                  String
-    uploadedAt              DateTime @db.DateTime()
+    uploadedAt              DateTime                @default(now())
 
     StudentProfileId        String?
-    StudentProfile          StudentProfile? @relation(fields: [StudentProfileId], references: [id]) 
+    StudentProfile          StudentProfile?         @relation(fields: [StudentProfileId], references: [id]) 
     
     @@index([StudentProfileId])
 }
 
 model Course {
-    id                      String @id @default(uuid())
+    id                      String                  @id @default(uuid())
     userId                  String
-    title                   String @db.Text
-    description             String? @db.Text
-    imageUrl                String? @db.Text
+    title                   String                  @db.Text
+    description             String?                 @db.Text
+    imageUrl                String?                 @db.Text
     price                   Float?
-    isPublished             Boolean @default(false)
+    isPublished             Boolean                 @default(false)
 
     categoryId              String?
-    category                Category? @relation(fields: [categoryId], references: [id])
+    category                Category?               @relation(fields: [categoryId], references: [id])
 
     studentProfileId        String?
-    studentProfile          StudentProfile? @relation(fields: [studentProfileId], references: [id])
+    studentProfile          StudentProfile?         @relation(fields: [studentProfileId], references: [id])
 
     chapters                Chapter[]
     attachments             Attachment[]
     purchases               Purchase[]
 
-    createdAt               DateTime @default(now())
-    updateAt                DateTime @updatedAt
+    createdAt               DateTime                @default(now())
+    updateAt                DateTime                @updatedAt
 
     @@index([categoryId])
     @@index([studentProfileId])
@@ -74,115 +74,120 @@ model Course {
 }
 
 model Category {
-    id                      String @id @default(uuid())
-    name                    String @unique
+    id                      String                  @id @default(uuid())
+    name                    String                  @unique
     courses                 Course[]
 }
 
 model Attachment {
-    id                      String @id @default(uuid())
+    id                      String                  @id @default(uuid())
     name                    String
-    url                     String @db.Text
+    url                     String                  @db.Text
 
     courseId                String
-    course                  Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+    course                  Course                  @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
-    createdAt               DateTime @default(now())
-    updatedAt               DateTime @updatedAt
+    createdAt               DateTime                @default(now())
+    updatedAt               DateTime                @updatedAt
 
     @@index([courseId])
 }
 
 model Chapter {
-    id                      String @id @default(uuid())
+    id                      String                  @id @default(uuid())
     title                   String
-    description             String? @db.Text
-    videoUrl                String? @db.Text
+    description             String?                 @db.Text
+    videoUrl                String?                 @db.Text
     position                Int
-    isPublished             Boolean @default(false)
-    isFree                  Boolean @default(false)
+    isPublished             Boolean                 @default(false)
+    isFree                  Boolean                 @default(false)
 
     muxData                 MuxData?
 
     courseId                String
-    course                  Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+    course                  Course                  @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
     userProgress            UserProgress[]
     tasks                   Task[]
 
-    createdAt               DateTime @default(now())
-    updateAt                DateTime @updatedAt()
+    createdAt               DateTime                @default(now())
+    updateAt                DateTime                @updatedAt()
 
     @@index([courseId])
 }
 
 model Task {
-    id                      String @id @default(uuid())
+    id                      String                  @id @default(uuid())
     title                   String
-    description             String? @db.Text
-    videoUrl                String? @db.Text
+    description             String?                 @db.Text
+    videoUrl                String?                 @db.Text
     position                Int
-    isPublished             Boolean @default(false)
-    isFree                  Boolean @default(false)
+    isPublished             Boolean                 @default(false)
+    isFree                  Boolean                 @default(false)
 
     muxData                 MuxData?
+    userProgress            UserProgress?
 
     chapterId               String?
-    chapter                 Chapter? @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+    chapter                 Chapter?                @relation(fields: [chapterId], references: [id], onDelete: Cascade)
 
-    createdAt               DateTime @default(now())
-    updateAt                DateTime @updatedAt()
+    createdAt               DateTime                @default(now())
+    updateAt                DateTime                @updatedAt()
 
     @@index([chapterId])
 }
 
 model MuxData {
-    id                      String @id @default(uuid())
+    id                      String                  @id @default(uuid())
     assetId                 String
     playbackId              String?
 
-    chapterId               String @unique
-    chapter                 Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+    chapterId               String                  @unique
+    chapter                 Chapter                 @relation(fields: [chapterId], references: [id], onDelete: Cascade)
 
-    taskId                  String? @unique
-    task                    Task? @relation(fields: [taskId], references: [id], onDelete: Cascade)
+    taskId                  String?                 @unique
+    task                    Task?                   @relation(fields: [taskId], references: [id], onDelete: Cascade)
 }
 
 model UserProgress {
-    id                      String @id @default(uuid())
-    userId                  String
+    id                      String                  @id @default(uuid())
+    userId                  String                  @unique
   
     chapterId               String
-    chapter                 Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+    chapter                 Chapter                 @relation(fields: [chapterId], references: [id], onDelete: Cascade)
 
-    isCompleted             Boolean @default(false)
+    taskId                  String                  @unique
+    task                    Task                    @relation(fields: [taskId], references: [id])
 
-    createdAt               DateTime @default(now())
-    updateAt                DateTime @updatedAt()
+    isCompleted             Boolean                 @default(false)
+
+    createdAt               DateTime                @default(now())
+    updateAt                DateTime                @updatedAt()
 
     @@index([chapterId])
+    @@index([taskId])
     @@unique([userId, chapterId])
 }
 
 model Purchase {
-    id                      String @id @default(uuid())
+    id                      String                  @id @default(uuid())
     userId                  String
 
     courseId                String
-    course                  Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+    course                  Course                  @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
-    createdAt               DateTime @default(now())
-    updateAt                DateTime @updatedAt()
+    createdAt               DateTime                @default(now())
+    updateAt                DateTime                @updatedAt()
 
     @@index([courseId])
     @@unique([userId, courseId])
 }
 
 model StripeCustomer {
-    id                      String @id @default(uuid())
-    userId                  String @unique
-    stripeCustomerId        String @unique
+    id                      String                  @id @default(uuid())
+    userId                  String                  @unique
+    stripeCustomerId        String                  @unique
 
-    createdAt               DateTime @default(now())
-    updatedAt               DateTime @updatedAt
+    createdAt               DateTime                @default(now())
+    updatedAt               DateTime                @updatedAt
 }
