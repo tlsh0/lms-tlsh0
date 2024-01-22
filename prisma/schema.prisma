@@ -55,9 +55,6 @@ model Course {
     price                   Float?
     isPublished             Boolean                 @default(false)
 
-    categoryId              String?
-    category                Category?               @relation(fields: [categoryId], references: [id])
-
     studentProfileId        String?
     studentProfile          StudentProfile?         @relation(fields: [studentProfileId], references: [id])
 
@@ -68,15 +65,8 @@ model Course {
     createdAt               DateTime                @default(now())
     updateAt                DateTime                @updatedAt
 
-    @@index([categoryId])
     @@index([studentProfileId])
     @@fulltext([title])
-}
-
-model Category {
-    id                      String                  @id @default(uuid())
-    name                    String                  @unique
-    courses                 Course[]
 }
 
 model Attachment {

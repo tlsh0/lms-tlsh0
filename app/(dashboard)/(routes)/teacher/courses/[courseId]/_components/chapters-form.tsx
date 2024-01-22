@@ -88,18 +88,17 @@ export const ChaptersForm = ({
         <div className="relative mt-6 border bg-slate-100 rounded-md p-4">
             {isUpdating && (
                 <div className="absolute h-full w-full bg-slate-500/20 top-0 right-0 rounded-md flex items-center justify-center">
-                    <Loader2 className="animate-spin h-6 w-6 text-sky-700" />
+                    <Loader2 className="animate-spin h-6 w-6 text-red-700" />
                 </div>
             )}
-            <div className="font-medium flex items-center justify-between">
-                Course chapters
+            <div className="font-medium flex pl-auto justify-end">
                 <Button onClick={toggleCreating} variant="ghost">
                     {isCreating ? (
                         <>Cancel</>
                     ) : (
                         <>
                             <PlusCircle className="h-4 w-4 mr-2" />
-                            Add a chapter
+                            Add a lesson
                         </>
                     )}
                 </Button>
@@ -118,7 +117,7 @@ export const ChaptersForm = ({
                                     <FormControl>
                                         <Input 
                                             disabled={isSubmitting}
-                                            placeholder="e.g. 'Introduction to the course'"
+                                            placeholder="e.g. 'Lessson 1'"
                                             {...field}
                                         />
                                     </FormControl>
@@ -150,7 +149,7 @@ export const ChaptersForm = ({
             )}
             {!isCreating && (
                 <p className="text-xs text-muted-foreground mt-4">
-                    Drag and drop to reorder the chapters
+                    Drag and drop to reorder the lessons
                 </p>
             )}
         </div>

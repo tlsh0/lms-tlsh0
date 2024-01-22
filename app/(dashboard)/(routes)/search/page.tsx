@@ -22,16 +22,10 @@ const SearchPage = async ({
         return redirect("/");
     }
 
-    const categories = await db.category.findMany({
-        orderBy: {
-            name: "asc"
-        }
+    const courses = await getCourses({
+        userId,
+        ...searchParams,
     });
-
-const courses = await getCourses({
-    userId,
-    ...searchParams,
-});
 
     return ( 
         <>
@@ -40,9 +34,6 @@ const courses = await getCourses({
                 <SearchInput />
             </div>
             <div className="p-6 space-y-4">
-                <Categories 
-                    items={categories}
-                />
                 <CoursesList items={courses} />
             </div>
         </>

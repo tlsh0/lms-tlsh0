@@ -14,6 +14,8 @@ import {
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { Router } from "@/node_modules/next/router";
+import { useRouter } from "@/node_modules/next/navigation";
 
 
 export const columns: ColumnDef<Course>[] = [
@@ -31,29 +33,29 @@ export const columns: ColumnDef<Course>[] = [
       )
     },
   },
-  {
-    accessorKey: "price",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Price
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    cell: ({ row }) => {
-      const price = parseFloat(row.getValue("price") || "0");
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD"
-      }).format(price);
+  // {
+  //   accessorKey: "price",
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         variant="ghost"
+  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //       >
+  //         Price
+  //         <ArrowUpDown className="ml-2 h-4 w-4" />
+  //       </Button>
+  //     )
+  //   },
+  //   cell: ({ row }) => {
+  //     const price = parseFloat(row.getValue("price") || "0");
+  //     const formatted = new Intl.NumberFormat("en-US", {
+  //       style: "currency",
+  //       currency: "USD"
+  //     }).format(price);
 
-      return <div>{formatted}</div>
-    }
-  },
+  //     return <div>{formatted}</div>
+  //   }
+  // },
   {
     accessorKey: "isPublished",
     header: ({ column }) => {
@@ -73,7 +75,7 @@ export const columns: ColumnDef<Course>[] = [
       return (
         <Badge className={cn(
           "bg-slate-500",
-          isPublished && "bg-sky-700"
+          isPublished && "bg-red-700"
         )}>
           {isPublished ? "Published" : "Draft"}
         </Badge>
@@ -104,9 +106,10 @@ export const columns: ColumnDef<Course>[] = [
       //   </DropdownMenu>
       // )
       return (
-        <div className="flex items-center">
-          <Link href={`/teacher/courses/${id}`}>
-            <Pencil className="h-4 w-4 mr-2 hover:opacity-75" />
+        <div className="flex items-center justify-center align-center">
+          <Link className="flex items-center justify-end" href={`/teacher/courses/${id}`}>
+            <Pencil className="h-4 w-4 mr-2 ml-[10px] hover:opacity-75" />
+            Edit
           </Link>
         </div>
       )
